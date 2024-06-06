@@ -117,7 +117,7 @@
             <div class="card-body">
 
                 <div class="row">
-                    @include('companies.fields')
+                    @include('categories.fields')
                 </div>
 
             </div>

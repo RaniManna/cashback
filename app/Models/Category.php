@@ -15,8 +15,8 @@ class Category extends Model
     ];
 
     protected $casts = [
-        'title' => 'string',
-        'description' => 'string',
+        'title' => 'array',
+        'description' => 'array',
         'image' => 'string'
     ];
 
@@ -24,5 +24,5 @@ class Category extends Model
         'title' => 'required|max:75'
     ];
 
-    
+
 }

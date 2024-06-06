@@ -12,7 +12,7 @@
             <tbody>
             @foreach($categories as $category)
                 <tr>
-                    <td>{{ $category->title }}</td>
+                    <td>{{ $category->title["en"] }}</td>
                     <td>{{ $category->description }}</td>
                     <td>{{ $category->image }}</td>
                     <td  style="width: 120px">

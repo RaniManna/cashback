@@ -1,8 +1,13 @@
 <!-- Title Field -->
-<div class="form-group col-sm-6 titleTranslate">
-    {!! Form::label('title', 'Title:') !!}
-    {!! Form::text('title', null, ['class' => 'form-control translate', 'id' => 'Title', 'required', 'maxlength' => 100]) !!}
-</div>
+{{--<div class="form-group col-sm-6 titleTranslate">--}}
+{{--    {!! Form::label('title', 'Title:') !!}--}}
+{{--    {!! Form::text('title', null, ['class' => 'form-control translate', 'id' => 'Title', 'required', 'maxlength' => 100]) !!}--}}
+{{--</div>--}}
+
+<!-- Title Field -->
+{{--@include('components.multilingual-input-field', ['name' => 'title', 'languages' => $languages])--}}
+<x-multilingual-input-field name="title" :languages="$languages"/>
+
 
 <!-- Description Field -->
 <div class="form-group col-sm-12 col-lg-12 descriptionTranslate">
