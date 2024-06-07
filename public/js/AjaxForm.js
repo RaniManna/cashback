@@ -337,24 +337,13 @@ $("#categoryAjaxForm").on('submit', function (e) {
     var TitleArray = {};
     var SubTitleArray = {};
     var DescriptionArray = {};
-    $(".titleTranslate input").each(function () {
-        var input = $(this);
-        var key = input.attr('lang');
-        var value = input.val();
-        TitleArray[key] = value;
 
-    });
-
-    $(".descriptionTranslate textarea").each(function () {
-        var input = $(this);
-        var key = input.attr('lang');
-        var value = input.val();
-        DescriptionArray[key] = value;
-
-    });
+    TitleArray = getTranslations("titleTranslate");
+    DescriptionArray = getTranslations("descriptionTranslate");
 
     data.set('title', JSON.stringify(TitleArray));
     data.set('description', JSON.stringify(DescriptionArray));
+
     $.ajax({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
@@ -431,3 +420,16 @@ $("#addServiceInput").on("click", function () {
     }
 
 });
+
+function getTranslations(translationNodeClass){
+    let res = [];
+
+    $(`.${translationNodeClass}`).each(function () {
+        var input = $(this);
+        var key = input.attr('lang');
+        var value = input.val();
+        res[key] = value;
+    });
+
+    return res;
+}

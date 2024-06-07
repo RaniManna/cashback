@@ -6,13 +6,13 @@
 
 <!-- Title Field -->
 {{--@include('components.multilingual-input-field', ['name' => 'title', 'languages' => $languages])--}}
-<x-multilingual-input-field name="title" :languages="$languages"/>
+<x-multilingual-input-field name="title" :languages="$languages" inputType="input" inputAttrs="required"/>
+<x-multilingual-input-field name="description" :languages="$languages" inputType="textarea" inputAttrs=""/>
 
 
 <!-- Description Field -->
 <div class="form-group col-sm-12 col-lg-12 descriptionTranslate">
     {!! Form::label('description', 'Description:') !!}
-    {!! Form::textarea('description', null, ['class' => 'form-control translate', 'id' => 'description']) !!}
 </div>
 <div id="newlang" class="form-group">
 </div>

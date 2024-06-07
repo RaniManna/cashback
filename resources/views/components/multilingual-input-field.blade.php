@@ -1,31 +1,40 @@
+@props(['name', 'languages','inputType',"inputAttrs"])
 
-@props(['name', 'languages'])
+<div class="col-sm-12 mb-3 mt-3 ">
+    {!! Form::label($name, ucfirst($name) . ':', ['class' => 'input-group-text p-0 font-weight-bold', 'style' => 'border: none; background: none;']) !!}
+    <div class="input-group form-group col-sm-12 pt-0" style="border-bottom:1px solid #ccc; padding-bottom: 2px;">
+        @if($inputType == "input")
+            {!! Form::text("main{$name}", null, ['class' => 'form-control pt-0 pb-0', 'id' => "main{$name}", 'style' => 'border: none; box-shadow: none;', "placeholder"=>"Enter {$name}", $inputAttrs]) !!}
+        @endif
 
-<div class="form-group col-sm-12 " style="border-bottom: 1px solid #ccc; padding-bottom: 2px;">
-    <div class="input-group">
-        {!! Form::label($name, ucfirst($name) . ':', ['class' => 'input-group-text', 'style' => 'border: none; background: none;']) !!}
-        {!! Form::text("main{$name}", null, ['class' => 'form-control', 'id' => "main{$name}", 'required', 'style' => 'border: none; box-shadow: none;']) !!}
+        @if($inputType == "textarea")
+            {!! Form::textarea("main{$name}", null, ['class' => 'form-control pt-0 pb-0', 'id' => "main{$name}", "placeholder"=>"Enter {$name}", $inputAttrs]) !!}
+        @endif
+
         <div class="input-group-append">
-            <select id="languageSelector" class="form-control" style="border: none; box-shadow: none;">
+            <select id="languageSelector{{$name}}" class="form-control pt-0 pb-0"
+                    style="border: none; box-shadow: none;cursor: pointer">
                 @foreach($languages as $language)
                     <option value="{{ $language->code }}">{{ $language->Title }}</option>
                 @endforeach
             </select>
-            <button type="button" class="btn btn-outline-secondary" data-toggle="modal" data-target="#languageModal" style="border: none; background: none;">
+            <button type="button" class="btn btn-outline-secondary pt-0 pb-0" data-toggle="modal"
+                    data-target="#languageModal{{$name}}" style="border: none; background: none;">
                 <i class="fa fa-expand-arrows-alt" style="font-size: 1.5em;"></i>
             </button>
         </div>
     </div>
     @foreach($languages as $language)
-        {!! Form::hidden("{$name}[{$language->code}]", null, ['id' => "{$name}_{$language->code}"]) !!}
+        {!! Form::hidden("{$name}[{$language->code}]", null, ['id' => "{$name}_{$language->code}","class" => "{$name}Translate",'data-lang' => $language->code]) !!}
     @endforeach
 </div>
 
-<div class="modal fade" id="languageModal" tabindex="-1" role="dialog" aria-labelledby="languageModalLabel" aria-hidden="true">
+<div class="modal fade" id="languageModal{{$name}}" tabindex="-1" role="dialog" aria-labelledby="languageModal{{$name}}Label"
+     aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="languageModalLabel">Title</h5>
+                <h5 class="modal-title" id="languageModal{{$name}}Label">{{$name}}</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -34,7 +43,13 @@
                 @foreach($languages as $language)
                     <div class="form-group">
                         {!! Form::label("{$name}_{$language->code}", "{$language->Title}") !!}
-                        {!! Form::text("{$name}[{$language->code}]", null, ['class' => 'form-control modal-input', 'data-lang' => $language->code]) !!}
+                        @if($inputType == "input")
+                            {!! Form::text("{$name}[{$language->code}]", null, ['class' => "form-control modal-input-$name", 'data-lang' => $language->code,$inputAttrs]) !!}
+                        @endif
+
+                        @if($inputType == "textarea")
+                            {!! Form::textarea("{$name}[{$language->code}]", null, ['class' => "form-control modal-input-$name", 'data-lang' => $language->code,$inputAttrs]) !!}
+                        @endif
                     </div>
                 @endforeach
             </div>
@@ -45,44 +60,44 @@
 @push('scripts')
     @section('scripts')
         <script>
-            $(document).ready(function() {
+            $(document).ready(function () {
                 function updateHiddenInput(selectedLang, value) {
                     $('#{{$name}}_' + selectedLang).val(value);
                 }
 
                 function updateMainInputField() {
-                    var selectedLang = $('#languageSelector').val();
+                    var selectedLang = $('#languageSelector{{$name}}').val();
                     var title = $('#{{$name}}_' + selectedLang).val();
                     $('#main{{$name}}').val(title).attr('name', '{{$name}}[' + selectedLang + ']');
                 }
 
                 function updateModalInputs() {
-                    $('.modal-input').each(function() {
+                    $(".modal-input-{{$name}}").each(function () {
                         var lang = $(this).data('lang');
                         var value = $('#{{$name}}_' + lang).val();
                         $(this).val(value);
                     });
                 }
 
-                $('#languageSelector').change(function() {
+                $('#languageSelector{{$name}}').change(function () {
                     updateMainInputField();
                 });
 
-                $('.modal-input').on('input', function() {
+                $('.modal-input-{{$name}}').on('input', function () {
                     var lang = $(this).data('lang');
                     var value = $(this).val();
                     updateHiddenInput(lang, value);
                     updateMainInputField();
                 });
 
-                $('#languageSelector').trigger('change');
+                $('#languageSelector{{$name}}').trigger('change');
 
-                $('#languageModal').on('show.bs.modal', function(event) {
+                $('#languageModal{{$name}}').on('show.bs.modal', function (event) {
                     updateModalInputs();
                 });
 
-                $('#languageModal').on('hidden.bs.modal', function(event) {
-                    $('.modal-input').each(function() {
+                $('#languageModal{{$name}}').on('hidden.bs.modal', function (event) {
+                    $('.modal-input-{{$name}}').each(function () {
                         var lang = $(this).data('lang');
                         var value = $(this).val();
                         updateHiddenInput(lang, value);
@@ -90,8 +105,8 @@
                     updateMainInputField();
                 });
 
-                $('#main{{$name}}').on('input', function() {
-                    var selectedLang = $('#languageSelector').val();
+                $('#main{{$name}}').on('input', function () {
+                    var selectedLang = $('#languageSelector{{$name}}').val();
                     var value = $(this).val();
                     updateHiddenInput(selectedLang, value);
                     $('[name="{{$name}}[' + selectedLang + ']"]').val(value);
