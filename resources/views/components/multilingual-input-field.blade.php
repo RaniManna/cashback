@@ -29,7 +29,8 @@
     @endforeach
 </div>
 
-<div class="modal fade" id="languageModal{{$name}}" tabindex="-1" role="dialog" aria-labelledby="languageModal{{$name}}Label"
+<div class="modal fade" id="languageModal{{$name}}" tabindex="-1" role="dialog"
+     aria-labelledby="languageModal{{$name}}Label"
      aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -57,61 +58,66 @@
     </div>
 </div>
 
-@push('scripts')
-    @section('scripts')
-        <script>
-            $(document).ready(function () {
-                function updateHiddenInput(selectedLang, value) {
-                    $('#{{$name}}_' + selectedLang).val(value);
-                }
 
-                function updateMainInputField() {
-                    var selectedLang = $('#languageSelector{{$name}}').val();
-                    var title = $('#{{$name}}_' + selectedLang).val();
-                    $('#main{{$name}}').val(title).attr('name', '{{$name}}[' + selectedLang + ']');
-                }
+@push('script-stack')
+    <script>
+        function updateHiddenInput(selectedLang, value, fieldName) {
+            $(`#${fieldName}_` + selectedLang).val(value);
+        }
 
-                function updateModalInputs() {
-                    $(".modal-input-{{$name}}").each(function () {
-                        var lang = $(this).data('lang');
-                        var value = $('#{{$name}}_' + lang).val();
-                        $(this).val(value);
-                    });
-                }
+        function updateMainInputField(fieldName) {
+            var selectedLang = $(`#languageSelector${fieldName}`).val();
+            var title = $(`#${fieldName}_` + selectedLang).val();
+            $(`#main${fieldName}`).val(title);
+        }
 
-                $('#languageSelector{{$name}}').change(function () {
-                    updateMainInputField();
-                });
+        function updateModalInputs(fieldName) {
+            $(`.modal-input-${fieldName}`).each(function () {
+                var lang = $(this).data('lang');
+                var value = $(`#${fieldName}_` + lang).val();
+                $(this).val(value);
+            });
+        }
+        $(document).ready(function () {
+            $('#languageSelector{{$name}}').change(function () {
+                updateMainInputField("{{$name}}");
+            });
 
-                $('.modal-input-{{$name}}').on('input', function () {
+            $('.modal-input-{{$name}}').on('input', function () {
+                var lang = $(this).data('lang');
+                var value = $(this).val();
+                updateHiddenInput(lang, value, "{{$name}}");
+                updateMainInputField("{{$name}}");
+            });
+
+            $('#languageSelector{{$name}}').trigger('change');
+
+            $('#languageModal{{$name}}').on('show.bs.modal', function (event) {
+                updateModalInputs("{{$name}}");
+            });
+
+            $('#languageModal{{$name}}').on('hidden.bs.modal', function (event) {
+                $('.modal-input-{{$name}}').each(function () {
                     var lang = $(this).data('lang');
                     var value = $(this).val();
-                    updateHiddenInput(lang, value);
-                    updateMainInputField();
+                    updateHiddenInput(lang, value, "{{$name}}");
                 });
-
-                $('#languageSelector{{$name}}').trigger('change');
-
-                $('#languageModal{{$name}}').on('show.bs.modal', function (event) {
-                    updateModalInputs();
-                });
-
-                $('#languageModal{{$name}}').on('hidden.bs.modal', function (event) {
-                    $('.modal-input-{{$name}}').each(function () {
-                        var lang = $(this).data('lang');
-                        var value = $(this).val();
-                        updateHiddenInput(lang, value);
-                    });
-                    updateMainInputField();
-                });
-
-                $('#main{{$name}}').on('input', function () {
-                    var selectedLang = $('#languageSelector{{$name}}').val();
-                    var value = $(this).val();
-                    updateHiddenInput(selectedLang, value);
-                    $('[name="{{$name}}[' + selectedLang + ']"]').val(value);
-                });
+                updateMainInputField("{{$name}}");
             });
-        </script>
-    @endsection
+
+            $('.modal-input-{{$name}}').on("keypress",function (event){
+                if (event.key === 'Enter') {
+                    event.preventDefault();
+                }
+            })
+
+
+            $('#main{{$name}}').on('input', function () {
+                var selectedLang = $('#languageSelector{{$name}}').val();
+                var value = $(this).val();
+                updateHiddenInput(selectedLang, value, "{{$name}}");
+                $('[name="{{$name}}[' + selectedLang + ']"]').val(value);
+            });
+        });
+    </script>
 @endpush

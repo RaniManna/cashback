@@ -58,6 +58,7 @@
 <script src="/js/custom.js"></script>
 
 @yield('scripts')
+@stack('script-stack')
 
 @if (session()->has('success'))
 <script>

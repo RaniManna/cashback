@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
  use Illuminate\Database\Eloquent\SoftDeletes; use Illuminate\Database\Eloquent\Factories\HasFactory;
-class Branch extends Model
+class Branch extends TranslateAbleModel
 {
      use SoftDeletes;    use HasFactory;    public $table = 'branches';
 
@@ -17,7 +17,7 @@ class Branch extends Model
     ];
 
     protected $casts = [
-        'title' => 'string',
+        'title' => 'array',
         'lat' => 'string',
         'lan' => 'string',
         'company_id' => 'integer',
@@ -29,5 +29,13 @@ class Branch extends Model
         'lan' => 'required'
     ];
 
-    
+    /**
+     * @return array<string,bool>
+     */
+    public function getTranslatedFields(): array
+    {
+        return [
+            "title" => true,
+        ];
+    }
 }

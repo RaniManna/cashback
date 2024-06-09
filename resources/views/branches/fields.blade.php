@@ -1,8 +1,6 @@
 <!-- Title Field -->
-<div class="form-group col-sm-6">
-    {!! Form::label('title', 'Title:') !!}
-    {!! Form::text('title', null, ['class' => 'form-control']) !!}
-</div>
+<x-multilingual-input-field name="title" :languages="$languages" inputType="input" inputAttrs="required"/>
+
 
 <!-- Lat Field -->
 <div class="form-group col-sm-6">

@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
  use Illuminate\Database\Eloquent\SoftDeletes; use Illuminate\Database\Eloquent\Factories\HasFactory;
-class Company extends Model
+class Company  extends  TranslateAbleModel
 {
      use SoftDeletes;    use HasFactory;    public $table = 'companies';
 
@@ -17,8 +17,8 @@ class Company extends Model
     ];
 
     protected $casts = [
-        'title' => 'string',
-        'description' => 'string',
+        'title' => 'array',
+        'description' => 'array',
         'image' => 'string',
         'balance' => 'double',
         'provider_id' => 'integer'
@@ -28,5 +28,16 @@ class Company extends Model
         'title' => 'required'
     ];
 
-    
+    /**
+     * @return array<string,bool>
+     */
+    public function getTranslatedFields(): array
+    {
+        return [
+            "title" => true,
+            "description" => true
+        ];
+    }
+
+
 }

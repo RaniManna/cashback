@@ -10,17 +10,9 @@
     {!! Form::number('branch_id', null, ['class' => 'form-control', 'required']) !!}
 </div>
 
-<!-- Title Field -->
-<div class="form-group col-sm-6">
-    {!! Form::label('Title', 'Title:') !!}
-    {!! Form::text('Title', null, ['class' => 'form-control', 'required']) !!}
-</div>
+<x-multilingual-input-field name="title" :languages="$languages" inputType="input" inputAttrs="required"/>
+<x-multilingual-input-field name="description" :languages="$languages" inputType="textarea" inputAttrs=""/>
 
-<!-- Description Field -->
-<div class="form-group col-sm-6">
-    {!! Form::label('description', 'Description:') !!}
-    {!! Form::text('description', null, ['class' => 'form-control']) !!}
-</div>
 
 <!-- Image Field -->
 <div class="form-group col-sm-6">

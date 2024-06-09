@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
  use Illuminate\Database\Eloquent\SoftDeletes; use Illuminate\Database\Eloquent\Factories\HasFactory;
-class CashbackOffer extends Model
+class CashbackOffer extends TranslateAbleModel
 {
      use SoftDeletes;    use HasFactory;    public $table = 'cashback_offers';
 
@@ -20,8 +20,8 @@ class CashbackOffer extends Model
     protected $casts = [
         'category_id' => 'integer',
         'branch_id' => 'integer',
-        'Title' => 'string',
-        'description' => 'string',
+        'Title' => 'array',
+        'description' => 'array',
         'image' => 'string',
         'points' => 'double'
     ];
@@ -33,5 +33,14 @@ class CashbackOffer extends Model
         'points' => 'required'
     ];
 
-    
+    /**
+     * @return array<string,bool>
+     */
+    public function getTranslatedFields(): array
+    {
+        return [
+            "title" => true,
+            "description" => true
+        ];
+    }
 }
